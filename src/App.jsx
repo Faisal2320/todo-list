@@ -28,11 +28,25 @@ function App() {
       ];
     });
   };
+
+  const updateTodo = (todo) => {
+    const updatedTodos = todos.map((t) => {
+      if (t.id === todo.id) {
+        return todo;
+      }
+      return t;
+    });
+    setTodos(updatedTodos);
+  };
   return (
     <div className="todo-container">
       <h1>My todos</h1>
       <TodoForm funcAddTodo={addTodo} />
-      <TodoList onCompleteTodo={completeTodo} todos={todos} />
+      <TodoList
+        onUpdateTodo={updateTodo}
+        onCompleteTodo={completeTodo}
+        todos={todos}
+      />
     </div>
   );
 }
