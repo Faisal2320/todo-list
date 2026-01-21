@@ -1,8 +1,21 @@
+import { useMemo } from "react";
 import TodoListItem from "./TodoListItem";
-export default function TodoList({ onCompleteTodo, onUpdateTodo, todos }) {
-  const filteredTodoList = todos
-    .filter(Boolean)
-    .filter((todo) => !todo.isCompleted);
+
+// TodoList component to display list of todos
+export default function TodoList({
+  dataVersion,
+  onCompleteTodo,
+  onUpdateTodo,
+  todos,
+}) {
+  const filteredTodoList = useMemo(() => {
+    console.log("Recalculating filtered Todos (v", dataVersion, ")");
+
+    return {
+      version: dataVersion,
+      todos: todos.filter((todo) => !todo.isCompleted),
+    };
+  }, [dataVersion, todos]);
 
   return (
     <>
@@ -10,7 +23,7 @@ export default function TodoList({ onCompleteTodo, onUpdateTodo, todos }) {
         <p>Add todos above to get started</p>
       ) : (
         <ul>
-          {filteredTodoList.map((task) => {
+          {filteredTodoList.todos.map((task) => {
             return (
               <TodoListItem
                 task={task}
