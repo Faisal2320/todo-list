@@ -151,6 +151,7 @@ export const todoReducer = (state = initialState, action) => {
         dataVersion: state.dataVersion + 1,
       };
     case TODO_ACTIONS.COMPLETE_TODO_ERROR:
+      console.log("Complete TODO ERROR payload:", action.payload);
       return {
         ...state,
         isLoading: false,
@@ -189,6 +190,12 @@ export const todoReducer = (state = initialState, action) => {
       return {
         ...state,
         filterError: action.payload,
+      };
+    case TODO_ACTIONS.CLEAR_ERROR:
+      return {
+        ...state,
+        apiError: "",
+        filterError: "",
       };
     default:
       throw new Error(`Unknown action type: ${action.type}`);

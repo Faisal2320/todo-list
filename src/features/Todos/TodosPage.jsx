@@ -11,8 +11,9 @@ import {
   initialState,
   todoReducer,
 } from "../../reducers/todoReducer";
+import { useAuth } from "../../contexts/AuthContext";
 
-const TodosPage = ({ token }) => {
+const TodosPage = () => {
   const [
     {
       todos,
@@ -28,6 +29,8 @@ const TodosPage = ({ token }) => {
   ] = useReducer(todoReducer, initialState);
 
   const debouncedFilterTerm = useDebounce(filterTerm, 300);
+  const { token } = useAuth();
+
   useEffect(() => {
     const paramsObject = {
       sortBy,
@@ -63,8 +66,6 @@ const TodosPage = ({ token }) => {
         }
         const data = await res.json();
         if (res.status === 200) {
-          // setTodos(data);
-          // setFilterError("");
           dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data });
         }
       } catch (err) {
@@ -226,7 +227,19 @@ const TodosPage = ({ token }) => {
   return (
     <div className="todo-container">
       <h1>Add todos</h1>
-      {apiError && <p className="error"> {apiError}</p>}
+      {apiError && (
+        <p className="error">
+          {" "}
+          {apiError}
+          <button
+            onClick={() =>
+              dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: "" })
+            }
+          >
+            Clear
+          </button>
+        </p>
+      )}
       {filterError && (
         <div>
           <p className="error"> {filterError}</p>

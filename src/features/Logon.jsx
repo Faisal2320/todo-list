@@ -1,13 +1,14 @@
 import { useState } from "react";
-const baseUrl = import.meta.env.VITE_BASE_URL;
+import { useAuth } from "../contexts/AuthContext";
 
 // const Logon = ({ onSetEmail = () => {}, onSetToken = () => {} })
-const Logon = ({ onSetEmail, onSetToken }) => {
+const Logon = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState(null);
   //   const [isLogon, setIsLogon] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,33 +17,12 @@ const Logon = ({ onSetEmail, onSetToken }) => {
       setIsLoading(true);
 
       //   fetching data from backend
-      const res = await fetch(`${baseUrl}/user/logon`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      //   console.log(res.status);
-      //    converting response to json
-      if (!res.ok) {
-        const data = await res.json();
-        if (data.status === 401) {
-          setAuthError("Invalid email or password. Please try again.");
-        }
-        throw new Error(`Error during authentication: ${data?.message}`);
-      }
-      const data = await res.json();
+      const result = await login(email, password);
 
-      if (res.status === 200 && data.name && data.csrfToken) {
-        onSetEmail(data.name);
-        onSetToken(data.csrfToken);
+      if (result.success) {
+        setAuthError(null);
       } else {
-        setAuthError(`Authentication failed: ${data?.message}`);
+        setAuthError(result.message || "Logon failed");
       }
     } catch (err) {
       setAuthError(`Authentication failed (${err.name}): ${err.message}`);
