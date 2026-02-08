@@ -1,8 +1,17 @@
+import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 const Logoff = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const { logout, isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <button onClick={logout}>Log Off</button> : null;
+  function handleLogout() {
+    logout();
+    navigate("/login", { replace: true });
+  }
+
+  return isAuthenticated ? (
+    <button onClick={handleLogout}>Log Out</button>
+  ) : null;
 };
 
 export default Logoff;

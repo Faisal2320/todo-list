@@ -3,24 +3,49 @@ import TodoListItem from "./TodoListItem";
 
 // TodoList component to display list of todos
 export default function TodoList({
+  statusFilter = "active",
   dataVersion,
   onCompleteTodo,
   onUpdateTodo,
   todos,
 }) {
   const filteredTodoList = useMemo(() => {
-    // console.log("Recalculating filtered Todos (v", dataVersion, ")");
+    let filterTodos;
+    switch (statusFilter) {
+      case "completed":
+        filterTodos = todos.filter((todo) => todo.isCompleted);
+        break;
+      case "active":
+        filterTodos = todos.filter((todo) => !todo.isCompleted);
+        break;
+      case "all":
+      default:
+        filterTodos = todos;
+        break;
+    }
+
     return {
       version: dataVersion,
-
-      todos: todos.filter((todo) => !todo.isCompleted),
+      todos: filterTodos,
     };
-  }, [dataVersion, todos]);
+  }, [dataVersion, todos, statusFilter]);
+
+  const getEmptyMessage = () => {
+    switch (statusFilter) {
+      case "completed":
+        return "No completed todos yet. Complete some tasks to see them here.";
+      case "active":
+        return "No active todos. Add a todo above to get started.";
+      case "all":
+      default:
+        return "add todo above to get started";
+    }
+  };
 
   return (
     <>
       {filteredTodoList.length === 0 ? (
-        <p>Add todos above to get started</p>
+        <p>{getEmptyMessage()}</p>
       ) : (
         <ul>
           {filteredTodoList.todos.map((task) => {

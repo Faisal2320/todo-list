@@ -1,17 +1,19 @@
 import { useEffect } from "react";
-import TodoList from "./TodoList/TodoList";
-import TodoForm from "./TodoForm";
+import TodoList from "../features/Todos/TodoList/TodoList";
+import TodoForm from "../features/Todos/TodoForm";
 const baseUrl = import.meta.env.VITE_BASE_URL;
-import SortBy from "../../shared/SortBy";
-import useDebounce from "../../utils/useDebounce";
-import FilterInput from "../../shared/FilterInput";
+import SortBy from "../shared/SortBy";
+import useDebounce from "../utils/useDebounce";
+import FilterInput from "../shared/FilterInput";
+import { useSearchParams } from "react-router";
+import StatusFilter from "../shared/StatusFilter";
 import { useReducer } from "react";
 import {
   TODO_ACTIONS,
   initialState,
   todoReducer,
-} from "../../reducers/todoReducer";
-import { useAuth } from "../../contexts/AuthContext";
+} from "../reducers/todoReducer";
+import { useAuth } from "../contexts/AuthContext";
 
 const TodosPage = () => {
   const [
@@ -30,6 +32,8 @@ const TodosPage = () => {
 
   const debouncedFilterTerm = useDebounce(filterTerm, 300);
   const { token } = useAuth();
+  const [searchParams] = useSearchParams(); // Add this line
+  const statusFilter = searchParams.get("status") || "all";
 
   useEffect(() => {
     const paramsObject = {
@@ -39,6 +43,7 @@ const TodosPage = () => {
     if (debouncedFilterTerm) {
       paramsObject.find = debouncedFilterTerm;
     }
+
     const params = new URLSearchParams(paramsObject);
 
     const fetchTodos = async () => {
@@ -69,23 +74,18 @@ const TodosPage = () => {
           dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data });
         }
       } catch (err) {
-        if (debouncedFilterTerm) {
-          dispatch({
-            type: TODO_ACTIONS.SET_FILTER_ERROR,
-            payload: `Error filtering/ sorting todos: ${err.message}`,
-          });
-        } else {
-          dispatch({
-            type: TODO_ACTIONS.FETCH_ERROR,
-            payload: err.message,
-          });
-        }
+        dispatch({
+          type: debouncedFilterTerm
+            ? TODO_ACTIONS.SET_FILTER_ERROR
+            : TODO_ACTIONS.FETCH_ERROR,
+          payload: err.message,
+        });
       } finally {
         // setIsLoading(false);
       }
     };
     fetchTodos();
-  }, [token, sortBy, sortDirection, debouncedFilterTerm]);
+  }, [token, sortBy, sortDirection, debouncedFilterTerm, searchParams]);
 
   const handleFilterTerm = (term) => {
     dispatch({ type: TODO_ACTIONS.SET_FILTER, payload: term });
@@ -102,11 +102,12 @@ const TodosPage = () => {
     });
 
     const checkedTodo = todos.find((todo) => todo && todo.id === id);
+
     try {
       const res = await fetch(`${baseUrl}/tasks/${id}`, {
         method: "PATCH",
         body: JSON.stringify({
-          isCompleted: true,
+          isCompleted: !checkedTodo.isCompleted,
           createdTime: checkedTodo.createdTime,
         }),
         headers: {
@@ -262,12 +263,14 @@ const TodosPage = () => {
         onSortDirectionChange={onSortDirectionChange}
       />
       <FilterInput filterTerm={filterTerm} onFilterTerm={handleFilterTerm} />
+      <StatusFilter />
       <TodoForm funcAddTodo={addTodo} />
       {isLoading ? (
         <p>Loading todos...</p>
       ) : (
         <>
           <TodoList
+            statusFilter={statusFilter}
             dataVersion={dataVersion}
             onUpdateTodo={updateTodo}
             onCompleteTodo={completeTodo}

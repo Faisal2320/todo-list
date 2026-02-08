@@ -1,8 +1,9 @@
 import Logoff from "../features/logoff";
+import Navigation from "./Navigation";
 const Header = () => {
   return (
     <header className="header">
-      <h1>My Todos</h1>
+      <Navigation />
       <Logoff />
     </header>
   );
