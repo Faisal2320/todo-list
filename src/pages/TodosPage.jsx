@@ -15,7 +15,6 @@ import {
 } from "../reducers/todoReducer";
 import { useAuth } from "../contexts/AuthContext";
 import loading from "../assets/img/loading.gif";
-import sanitizeInput from "../utils/sanitizeInput";
 
 const TodosPage = () => {
   const [
