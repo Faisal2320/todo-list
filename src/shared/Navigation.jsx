@@ -38,9 +38,9 @@ export default function Navigation() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/" className={linkClasses}>
+                <span className={linkClasses}>
                   <Logoff />
-                </NavLink>
+                </span>
               </li>
             </>
           ) : (
