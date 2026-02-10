@@ -1,5 +1,6 @@
 import { NavLink } from "react-router";
-import Logoff from "../features/logoff";
+// import Logoff from "../features/logoff.jsx";
+import Logoff from "../features";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Navigation() {
@@ -38,9 +39,9 @@ export default function Navigation() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/" className={linkClasses}>
+                <span className={linkClasses}>
                   <Logoff />
-                </NavLink>
+                </span>
               </li>
             </>
           ) : (
