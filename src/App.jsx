@@ -1,19 +1,46 @@
-import TodoList from "./TodoList";
-import TodoForm from "./TodoForm";
-import { useState } from "react";
+import "./App.css";
+
+import { Routes, Route } from "react-router";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import LoginPage from "./pages/LoginPage";
+import TodosPage from "./pages/TodosPage";
+import ProfilePage from "./pages/ProfilePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import RequireAuth from "./components/RequireAuth";
+import Header from "./shared/Header";
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  function addTodo(todoTitle) {
-    setTodos((prev) => {
-      return [todoTitle, ...prev];
-    });
-  }
+  // const { isAuthenticated, email } = useAuth();
+
   return (
-    <div className="">
-      <h1>My todos</h1>
-      <TodoForm funcAddTodo={addTodo} />
-      <TodoList todos={todos} />
+    <div className="min-h-screen w-9/10 mx-auto flex flex-col bg-gray-50 text-gray-800">
+      <Header />
+      {/* App Routes */}
+      <main className="flex-1 container mx-auto px-4 py-6">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/todos"
+            element={
+              <RequireAuth>
+                <TodosPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="/*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }
