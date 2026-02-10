@@ -1,21 +1,24 @@
 // src/pages/ProfilePage.jsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
+import { FaUser } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
-import { useReducer } from "react";
-const baseUrl = import.meta.env.VITE_BASE_URL;
 import {
   TODO_ACTIONS,
   initialState,
   todoReducer,
 } from "../reducers/todoReducer";
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
 const ProfilePage = () => {
-  const [{ todos, apiError, isLoading }, dispatch] = useReducer(
+  const [{ apiError, isLoading }, dispatch] = useReducer(
     todoReducer,
     initialState,
   );
+
   const { email, token } = useAuth();
+
   const [todoStatistics, setTodoStatics] = useState({
     all: 0,
     completed: 0,
@@ -25,8 +28,10 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       if (!token) return;
+
       try {
         dispatch({ type: TODO_ACTIONS.FETCH_START });
+
         const res = await fetch(`${baseUrl}/tasks`, {
           method: "GET",
           headers: {
@@ -34,10 +39,10 @@ const ProfilePage = () => {
           },
           credentials: "include",
         });
+
         if (!res.ok) {
           const data = await res.json();
           if (data.status === 401) {
-            // setApiError("Unauthorized access. Please log in.");
             dispatch({
               type: TODO_ACTIONS.FETCH_ERROR,
               payload: "Unauthorized access. Please log in.",
@@ -45,51 +50,59 @@ const ProfilePage = () => {
           }
           throw new Error(`Error fetching todos: ${res.statusText}`);
         }
+
         const data = await res.json();
+
         if (res.status === 200) {
           dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data });
+
           let completed = 0;
           let pending = 0;
+
           data.forEach((t) => {
-            if (t.isCompleted == true) {
-              completed += 1;
-            } else {
-              pending += 1;
-            }
+            t.isCompleted ? completed++ : pending++;
           });
-          setTodoStatics((prev) => {
-            return {
-              ...prev,
-              all: data.length,
-              completed,
-              pending,
-            };
+
+          setTodoStatics({
+            all: data.length,
+            completed,
+            pending,
           });
         }
       } catch (err) {
         dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: err.message });
-      } finally {
-        //
       }
     };
+
     fetchTodos();
   }, [token]);
-  return (
-    <div className="profile-page">
-      <h1>User Profile</h1>
 
-      <section>
-        <h2>User Information: {email}</h2>
+  return (
+    <div className="page-container">
+      {/* Page Title */}
+      <h1 className="heading-1 mb-22">User Profile</h1>
+
+      {/* User Info */}
+      <section className="section card">
+        <FaUser className="text-primary text-4xl inline-block" />
+
+        <p className=" pl-4 body-text inline-block">
+          <strong>Name:</strong> {email}
+        </p>
       </section>
 
-      <section>
-        <h2>Todo Statistics</h2>
+      {/* Todo Statistics */}
+      <section className="section card pl-15">
+        <h2 className="heading-2">Todo Statistics</h2>
 
-        {isLoading && <p>Loading statistics...</p>}
-        {apiError && <p className="error">{apiError}</p>}
+        {isLoading && (
+          <p className="text-gray-600 animate-pulse">Loading statistics...</p>
+        )}
+
+        {apiError && <div className="alert-error">{apiError}</div>}
 
         {!isLoading && !apiError && (
-          <ul>
+          <ul className="space-y-2 text-gray-700">
             <li>
               <strong>Total Todos:</strong> {todoStatistics.all}
             </li>

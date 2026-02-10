@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563eb;
+  --color-secondary: #64748b;
+  --color-accent: #f59e0b;
+}
+
+@layer components {
+  /* ----------------------------- */
+  /* BUTTONS                      */
+  /* ----------------------------- */
+
+  .btn {
+    @apply px-4 py-2 font-medium rounded-md shadow-sm transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90 active:bg-primary/80;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 active:bg-red-800;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 text-gray-700 hover:bg-gray-100;
+  }
+
+  /* ----------------------------- */
+  /* INPUTS                       */
+  /* ----------------------------- */
+
+  .input {
+    @apply w-full mb-2 px-3 py-2 border border-gray-300 rounded-md shadow-sm
+           focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+           transition;
+  }
+
+  .input-error {
+    @apply border-red-500 focus:ring-red-400 focus:border-red-500;
+  }
+
+  .input-disabled {
+    @apply bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200;
+  }
+
+  /* ----------------------------- */
+  /* FORM GROUPS                  */
+  /* ----------------------------- */
+
+  .form-group {
+    @apply flex flex-col gap-1 w-full;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-gray-700;
+  }
+
+  /* ----------------------------- */
+  /* PAGE CONTAINERS              */
+  /* ----------------------------- */
+
+  .page-container {
+    @apply max-w-3xl mx-auto px-4 py-10 space-y-8;
+  }
+
+  .section {
+    @apply space-y-3;
+  }
+
+  /* ----------------------------- */
+  /* TYPOGRAPHY                   */
+  /* ----------------------------- */
+
+  .heading-1 {
+    @apply text-3xl font-bold text-gray-800;
+  }
+
+  .heading-2 {
+    @apply text-xl font-semibold text-gray-800;
+  }
+
+  .body-text {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  /* ----------------------------- */
+  /* CARDS                        */
+  /* ----------------------------- */
+
+  .card {
+    @apply bg-white border border-gray-200 rounded-lg p-4 shadow-sm;
+  }
+
+  .card-hover {
+    @apply hover:shadow-md transition-shadow;
+  }
+
+  /* ----------------------------- */
+  /* ALERTS / ERRORS              */
+  /* ----------------------------- */
+
+  .alert-error {
+    @apply bg-red-50 border border-red-200 text-red-700 p-4 rounded-md;
+  }
+
+  .alert-warning {
+    @apply bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded-md;
+  }
+}

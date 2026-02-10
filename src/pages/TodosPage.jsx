@@ -14,6 +14,8 @@ import {
   todoReducer,
 } from "../reducers/todoReducer";
 import { useAuth } from "../contexts/AuthContext";
+import loading from "../assets/img/loading.gif";
+import sanitizeInput from "../utils/sanitizeInput";
 
 const TodosPage = () => {
   const [
@@ -74,11 +76,12 @@ const TodosPage = () => {
           dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data });
         }
       } catch (err) {
+        let action = debouncedFilterTerm ? "No Todo Found" : err.message;
         dispatch({
           type: debouncedFilterTerm
             ? TODO_ACTIONS.SET_FILTER_ERROR
             : TODO_ACTIONS.FETCH_ERROR,
-          payload: err.message,
+          payload: action,
         });
       } finally {
         // setIsLoading(false);
@@ -146,7 +149,11 @@ const TodosPage = () => {
   };
 
   const addTodo = async (todoTitle) => {
-    const newTodo = { id: Date.now(), title: todoTitle, isCompleted: false };
+    const newTodo = {
+      id: Date.now(),
+      title: todoTitle,
+      isCompleted: false,
+    };
     dispatch({ type: TODO_ACTIONS.ADD_TODO_START, payload: newTodo });
     try {
       const res = await fetch(`${baseUrl}/tasks`, {
@@ -163,7 +170,11 @@ const TodosPage = () => {
       });
 
       if (!res.ok) {
-        throw new Error(`Error adding todo: ${res.status}`);
+        if (res.status == 429) {
+          throw new Error(`Reached Max todos ${res.status}: `);
+        } else {
+          throw new Error(`Error adding todo: ${res.status}`);
+        }
       }
       if (res.status === 201) {
         const data = await res.json();
@@ -226,49 +237,79 @@ const TodosPage = () => {
   };
 
   return (
-    <div className="todo-container">
-      <h1>Add todos</h1>
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      <h1 className="text-3xl font-bold text-gray-800">Add Todos</h1>
+
+      {/* API Error */}
       {apiError && (
-        <p className="error">
-          {" "}
-          {apiError}
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md flex items-start justify-between">
+          <p className="text-sm">{apiError}</p>
           <button
             onClick={() =>
               dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: "" })
             }
+            className="ml-4 text-red-600 hover:text-red-800 font-medium"
           >
             Clear
           </button>
-        </p>
-      )}
-      {filterError && (
-        <div>
-          <p className="error"> {filterError}</p>
-          <button onClick={() => dispatch({ type: TODO_ACTIONS.RESET_FILTER })}>
-            Clear Filter Error
-          </button>
-          <button
-            onClick={() => {
-              dispatch({ type: TODO_ACTIONS.RESET_FILTER });
-            }}
-          >
-            Reset Filter
-          </button>
         </div>
       )}
-      <SortBy
-        sortBy={sortBy}
-        sortDirection={sortDirection}
-        onSortByChange={onSortByChange}
-        onSortDirectionChange={onSortDirectionChange}
-      />
-      <FilterInput filterTerm={filterTerm} onFilterTerm={handleFilterTerm} />
-      <StatusFilter />
+
+      {/* Filter Error */}
+      {filterError && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md space-y-3">
+          <p className="text-sm">{filterError}</p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => dispatch({ type: TODO_ACTIONS.RESET_FILTER })}
+              className="btn btn-secondary"
+            >
+              Clear Filter Error
+            </button>
+
+            <button
+              onClick={() => dispatch({ type: TODO_ACTIONS.RESET_FILTER })}
+              className="btn btn-primary"
+            >
+              Reset Filter
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Sorting + Filtering */}
+      <div className="card p-6">
+        <h2 className="heading-2 mb-4">Manage Todos</h2>
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <SortBy
+            sortBy={sortBy}
+            sortDirection={sortDirection}
+            onSortByChange={onSortByChange}
+            onSortDirectionChange={onSortDirectionChange}
+          />
+          <StatusFilter />
+        </div>
+        <div>
+          <FilterInput
+            filterTerm={filterTerm}
+            onFilterTerm={handleFilterTerm}
+          />
+        </div>
+      </div>
+
+      {/* Add Todo Form */}
       <TodoForm funcAddTodo={addTodo} />
-      {isLoading ? (
-        <p>Loading todos...</p>
-      ) : (
-        <>
+
+      {/* Loading State */}
+      <div className="relative">
+        {isLoading ? (
+          <img
+            className=" absolute w-80 -top-50 left-30 z-10 opacity-50"
+            src={loading}
+          />
+        ) : (
           <TodoList
             statusFilter={statusFilter}
             dataVersion={dataVersion}
@@ -276,8 +317,8 @@ const TodosPage = () => {
             onCompleteTodo={completeTodo}
             todos={todos}
           />
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

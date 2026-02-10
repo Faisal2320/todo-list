@@ -1,6 +1,7 @@
 import TextInputWithLabel from "../../../shared/TextInputWithLabel";
 import { isValidTodoTitle } from "../../../utils/todoValidation";
 import useEditableTitle from "../../../hooks/useEditableTitle";
+import sanitizeInput from "../../../utils/sanitizeInput";
 
 export default function TodoListItem({ onCompleteTodo, onUpdateTodo, task }) {
   const {
@@ -18,40 +19,75 @@ export default function TodoListItem({ onCompleteTodo, onUpdateTodo, task }) {
     }
     event.preventDefault();
     const newTitle = finishEditing();
-    onUpdateTodo({ ...task, title: newTitle });
+    const sanitizedTitle = sanitizeInput(newTitle);
+    onUpdateTodo({ ...task, title: sanitizedTitle });
   }
 
   return (
-    <li>
+    <li
+      className="
+        flex items-center justify-between
+        bg-white border border-gray-200 rounded-md
+        px-4 py-3 shadow-sm
+        hover:shadow-md transition
+      "
+    >
       {isEditing ? (
         <>
-          <form onSubmit={handleUpdate}>
+          <form
+            onSubmit={handleUpdate}
+            className="flex items-center gap-2 flex-1"
+          >
             <TextInputWithLabel
+              maxLength={25}
               value={workingTitle}
               onChange={(e) => updateTitle(e.target.value)}
             />
-            <button type="button" onClick={cancelEditing}>
+            <button
+              type="button"
+              onClick={cancelEditing}
+              className="px-3 py-2 rounded bg-gray-200 hover:bg-gray-300"
+            >
               Cancel
             </button>
             <button
               onClick={handleUpdate}
               type="button"
               disabled={!isValidTodoTitle(workingTitle)}
+              className="
+              px-3 py-2 rounded bg-blue-600 text-white
+              disabled:opacity-40 disabled:cursor-not-allowed
+            "
             >
               Update
             </button>
           </form>
         </>
       ) : (
-        <label>
+        <label className="flex items-center gap-3 flex-1 cursor-pointer">
           <input
             type="checkbox"
             id={`checkbox${task.id}`}
             checked={task.isCompleted}
             onChange={() => onCompleteTodo(task.id)}
+            className="
+      peer h-5 w-5 appearance-none rounded border border-gray-300
+      checked:bg-green-500 checked:border-green-500
+      flex items-center justify-center
+      transition
+    "
           />
 
-          <span onClick={startEditing}>{task.title}</span>
+          <span
+            onClick={startEditing}
+            className={`
+              flex-1
+              ${task.isCompleted ? "line-through text-teal-500" : "text-gray-800"}
+              hover:text-primary transition
+            `}
+          >
+            {task.title}
+          </span>
         </label>
       )}
     </li>

@@ -14,32 +14,34 @@ function App() {
   // const { isAuthenticated, email } = useAuth();
 
   return (
-    <header className="header">
+    <div className="min-h-screen w-9/10 mx-auto flex flex-col bg-gray-50 text-gray-800">
       <Header />
       {/* App Routes */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/todos"
-          element={
-            <RequireAuth>
-              <TodosPage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <ProfilePage />
-            </RequireAuth>
-          }
-        />
-        <Route path="/*" element={<NotFoundPage />} />
-      </Routes>
-    </header>
+      <main className="flex-1 container mx-auto px-4 py-6">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/todos"
+            element={
+              <RequireAuth>
+                <TodosPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="/*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

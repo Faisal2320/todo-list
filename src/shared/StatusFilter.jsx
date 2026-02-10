@@ -12,16 +12,18 @@ export default function StatusFilter() {
     }
     setSearchParams(searchParams);
   };
+
   return (
-    <div>
-      <label htmlFor="statusFilter">Show:</label>
+    <div className="form-group">
+      <label htmlFor="statusFilter" className="form-label">
+        Status
+      </label>
+
       <select
-        name="filter"
         id="statusFilter"
         value={currentStatus}
-        onChange={(e) => {
-          handleStatusChange(e.target.value);
-        }}
+        onChange={(e) => handleStatusChange(e.target.value)}
+        className="input"
       >
         <option value="all">All Todos</option>
         <option value="active">Active Todos</option>

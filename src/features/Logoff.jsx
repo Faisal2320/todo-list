@@ -10,7 +10,9 @@ const Logoff = () => {
   }
 
   return isAuthenticated ? (
-    <button onClick={handleLogout}>Log Out</button>
+    <button onClick={handleLogout} className="">
+      Log Out
+    </button>
   ) : null;
 };
 

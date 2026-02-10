@@ -44,20 +44,18 @@ export default function TodoList({
 
   return (
     <>
-      {filteredTodoList.length === 0 ? (
-        <p>{getEmptyMessage()}</p>
+      {filteredTodoList.todos.length === 0 ? (
+        <p className="text-gray-500 italic">{getEmptyMessage()}</p>
       ) : (
-        <ul>
-          {filteredTodoList.todos.map((task) => {
-            return (
-              <TodoListItem
-                task={task}
-                onCompleteTodo={onCompleteTodo}
-                onUpdateTodo={onUpdateTodo}
-                key={task.id}
-              />
-            );
-          })}
+        <ul className="space-y-2">
+          {filteredTodoList.todos.map((task) => (
+            <TodoListItem
+              task={task}
+              onCompleteTodo={onCompleteTodo}
+              onUpdateTodo={onUpdateTodo}
+              key={task.id}
+            />
+          ))}
         </ul>
       )}
     </>
