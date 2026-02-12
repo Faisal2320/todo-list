@@ -1,3 +1,5 @@
+import { BiArrowFromLeft } from "react-icons/bi";
+
 const SortBy = ({
   sortBy,
   sortDirection,
@@ -31,7 +33,7 @@ const SortBy = ({
           id="sort-direction"
           value={sortDirection}
           onChange={(e) => onSortDirectionChange(e.target.value)}
-          className="input"
+          className="input "
         >
           <option value="desc">Descending</option>
           <option value="asc">Ascending</option>

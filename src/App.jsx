@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RequireAuth from "./components/RequireAuth";
 import Header from "./shared/Header";
+import Logoff from "./features/Logoff";
 
 function App() {
   // const { isAuthenticated, email } = useAuth();

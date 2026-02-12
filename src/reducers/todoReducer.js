@@ -175,12 +175,12 @@ export const todoReducer = (state = initialState, action) => {
     case TODO_ACTIONS.SET_FILTER:
       return {
         ...state,
-        // isLoading: false,
         filterTerm: action.payload,
       };
     case TODO_ACTIONS.RESET_FILTER:
       return {
         ...state,
+        isLoading: false,
         filterTerm: "",
         filterError: "",
         sortBy: "createdAt",
@@ -189,6 +189,7 @@ export const todoReducer = (state = initialState, action) => {
     case TODO_ACTIONS.SET_FILTER_ERROR:
       return {
         ...state,
+        isLoading: false,
         filterError: action.payload,
       };
     case TODO_ACTIONS.CLEAR_ERROR:

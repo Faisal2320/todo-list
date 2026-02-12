@@ -70,12 +70,7 @@ export default function TodoListItem({ onCompleteTodo, onUpdateTodo, task }) {
             id={`checkbox${task.id}`}
             checked={task.isCompleted}
             onChange={() => onCompleteTodo(task.id)}
-            className="
-      peer h-5 w-5 appearance-none rounded border border-gray-300
-      checked:bg-green-500 checked:border-green-500
-      flex items-center justify-center
-      transition
-    "
+            className="special-check"
           />
 
           <span

@@ -38,7 +38,11 @@ export default function Navigation() {
                 </NavLink>
               </li>
               <li>
-                <span className={linkClasses}>
+                <span
+                  className={
+                    "px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-700 hover:text-primary hover:bg-gray-100"
+                  }
+                >
                   <Logoff />
                 </span>
               </li>

@@ -254,29 +254,6 @@ const TodosPage = () => {
         </div>
       )}
 
-      {/* Filter Error */}
-      {filterError && (
-        <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md space-y-3">
-          <p className="text-sm">{filterError}</p>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => dispatch({ type: TODO_ACTIONS.RESET_FILTER })}
-              className="btn btn-secondary"
-            >
-              Clear Filter Error
-            </button>
-
-            <button
-              onClick={() => dispatch({ type: TODO_ACTIONS.RESET_FILTER })}
-              className="btn btn-primary"
-            >
-              Reset Filter
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Sorting + Filtering */}
       <div className="card p-6">
         <h2 className="heading-2 mb-4">Manage Todos</h2>
@@ -300,22 +277,55 @@ const TodosPage = () => {
 
       {/* Add Todo Form */}
       <TodoForm funcAddTodo={addTodo} />
-
       {/* Loading State */}
       <div className="relative">
-        {isLoading ? (
-          <img
-            className=" absolute w-80 -top-50 left-30 z-10 opacity-50"
-            src={loading}
-          />
+        {filterError || isLoading ? (
+          <>
+            {filterError ? (
+              <>
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md space-y-3">
+                  <p className="text-sm">{filterError}</p>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() =>
+                        dispatch({ type: TODO_ACTIONS.RESET_FILTER })
+                      }
+                      className="btn btn-secondary"
+                    >
+                      Clear Filter Error
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        dispatch({ type: TODO_ACTIONS.RESET_FILTER })
+                      }
+                      className="btn btn-primary"
+                    >
+                      Reset Filter
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <img
+                  className=" absolute -top-1/1 left-1/2 z-10 opacity-50 w-20 transform -translate-x-1/2"
+                  src={loading}
+                />
+              </>
+            )}
+          </>
         ) : (
-          <TodoList
-            statusFilter={statusFilter}
-            dataVersion={dataVersion}
-            onUpdateTodo={updateTodo}
-            onCompleteTodo={completeTodo}
-            todos={todos}
-          />
+          <>
+            <TodoList
+              statusFilter={statusFilter}
+              dataVersion={dataVersion}
+              onUpdateTodo={updateTodo}
+              onCompleteTodo={completeTodo}
+              todos={todos}
+            />
+          </>
         )}
       </div>
     </div>
