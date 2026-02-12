@@ -91,7 +91,10 @@ const LoginPage = () => {
         </button>
       </form>
       {isLoading && (
-        <img className=" absolute top-0 z-10 opacity-50" src={loading} />
+        <img
+          className=" absolute bottom-0 left-1/2 z-10 opacity-50 w-20 transform -translate-x-1/2"
+          src={loading}
+        />
       )}
     </div>
   );

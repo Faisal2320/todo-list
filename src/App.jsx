@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RequireAuth from "./components/RequireAuth";
 import Header from "./shared/Header";
+import Logoff from "./features/Logoff";
 
 function App() {
   // const { isAuthenticated, email } = useAuth();
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/logoff" element={<Logoff />} />
           <Route
             path="/todos"
             element={
