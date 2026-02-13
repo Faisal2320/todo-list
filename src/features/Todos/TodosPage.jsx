@@ -10,7 +10,7 @@ const TodosPage = ({ token }) => {
   const [todos, setTodos] = useState([]);
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sortBy, setSortBy] = useState("createdDate");
+  const [sortBy, setSortBy] = useState("createdAt");
   const [sortDirection, setSortDirection] = useState("desc");
   const [filterTerm, setFilterTerm] = useState("");
   const debouncedFilterTerm = useDebounce(filterTerm, 300);
@@ -216,7 +216,7 @@ const TodosPage = ({ token }) => {
         onSortByChange={setSortBy}
         onSortDirectionChange={setSortDirection}
       />
-      <FilterInput filterTerm={filterTerm} onFilterTerm={handleFilterTerm} />
+      <FilterInput filterTerm={filterTerm} onFilterChange={handleFilterTerm} />
       <TodoForm funcAddTodo={addTodo} />
       {isLoading ? (
         <p>Loading todos...</p>

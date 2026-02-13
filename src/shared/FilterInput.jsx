@@ -1,4 +1,4 @@
-const FilterInput = ({ filterTerm, onFilterTerm }) => {
+const FilterInput = ({ filterTerm, onFilterChange }) => {
   return (
     <div>
       <label htmlFor="filterInput">Filter:</label>
@@ -6,7 +6,7 @@ const FilterInput = ({ filterTerm, onFilterTerm }) => {
         id="filterInput"
         type="text"
         value={filterTerm}
-        onChange={(e) => onFilterTerm(e.target.value)}
+        onChange={(e) => onFilterChange(e.target.value)}
         placeholder="Search by title..."
       />
     </div>

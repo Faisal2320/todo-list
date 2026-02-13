@@ -9,8 +9,6 @@ export default function TodoList({
   todos,
 }) {
   const filteredTodoList = useMemo(() => {
-    console.log("Recalculating filtered Todos (v", dataVersion, ")");
-
     return {
       version: dataVersion,
       todos: todos.filter((todo) => !todo.isCompleted),
@@ -19,7 +17,7 @@ export default function TodoList({
 
   return (
     <>
-      {filteredTodoList.length === 0 ? (
+      {filteredTodoList.todos.length === 0 ? (
         <p>Add todos above to get started</p>
       ) : (
         <ul>
