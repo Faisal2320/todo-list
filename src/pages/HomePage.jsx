@@ -10,7 +10,7 @@ const HomePage = () => {
     if (isAuthenticated) {
       navigate("/todos", { replace: true });
     } else {
-      navigate("login", { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
