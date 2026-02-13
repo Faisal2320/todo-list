@@ -2,7 +2,6 @@ import { NavLink } from "react-router";
 // import Logoff from "../features/Logoff.jsx";
 import Logoff from "../features/Logoff";
 import { useAuth } from "../contexts/AuthContext";
-
 export default function Navigation() {
   const { isAuthenticated } = useAuth();
 
